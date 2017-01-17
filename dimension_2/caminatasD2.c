@@ -8,12 +8,12 @@
 using std::cin;
 using std::cout;
 using std::endl;
-#define N 202 //2 más para promedio y desviación
+#define N 200 //2 más para promedio y desviación
 
 caminatasD2(){
 	Int_t simulaciones = 50;
 	Int_t caminatas = 100;
- 	Float_t matrizX[N][N];
+ 	Float_t matrizX[N][N+3];
  	Float_t matrizY[N][N];
 	
 	/*
@@ -40,6 +40,8 @@ caminatasD2(){
 	Out1<<"replot \"promedio.csv\" using 1:2 with linespoints linetype 3 linewidth 2"<<endl;
 	//Gráfica de desviaciones
 	Out1<<"replot \"desvEstd.csv\" using 1:2 with linespoints linetype 2 linewidth 1"<<endl;
+	//Gráfica de distancia
+	Out1<<"replot \"distancia.csv\""<<endl;
 	Out1.close();
 
 	calcula_promedio(matrizX,simulaciones,caminatas);
@@ -48,6 +50,7 @@ caminatasD2(){
 	calcula_desvEst(matrizY,simulaciones,caminatas);
 	crear_archivo_prom(matrizX,matrizY,simulaciones,caminatas);
 	crear_archivo_desv(matrizX,matrizY,simulaciones,caminatas);
+	calcula_distancia(matrizX,matrizY,simulaciones,caminatas);
 }
 // Calcula los pasos de una simulación
 void caminatas(Int_t simulacion, Int_t caminatas, Float_t matrizX[][N], Float_t matrizY[][N]){
@@ -113,7 +116,6 @@ void calcula_promedio(Float_t m_sim[][N], Int_t simulaciones, Int_t caminatas){
 void calcula_desvEst(Float_t m_sim[][N], Int_t simulaciones, Int_t caminatas){
 	Float_t suma = 0; //Suma de desviaciones
 	Float_t varianza = 0;
-	// Out3 = ofstream("desvEst.csv",ios::out);
 	for (Int_t i = 0; i < caminatas; i++)
 	{
 		suma = 0;
@@ -127,6 +129,24 @@ void calcula_desvEst(Float_t m_sim[][N], Int_t simulaciones, Int_t caminatas){
 		//calcula la desviación estándar
 		m_sim[i][simulaciones+1] = sqrt(varianza);
 	}
+}
+/*Calcula la distancia en cada paso*/
+void calcula_distancia(Float_t m_X[][N], Float_t m_Y[][N], Int_t simulaciones, Int_t caminatas){
+	Float_t X = 0;
+	Float_t Y = 0;
+	Float_t distancia = 0;
+	Out3 = ofstream("distancia.csv",ios::out);
+	
+	for (Int_t i = 0; i < caminatas; i++)
+	{
+		X = pow(m_X[i][simulaciones+1],2);
+		Y = pow(m_Y[i][simulaciones+1],2);
+		distancia = X + Y;
+		Out3<<distancia<<endl;	
+	}
+
+	Out3.close();
+	printf("distancia.csv\n");
 }
 void imprime_matriz(Float_t m_sim[][N], Int_t simulaciones, Int_t caminatas){
 	for (Int_t i = 0; i < caminatas; i++)

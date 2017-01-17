@@ -46,6 +46,7 @@ caminatasD1(){
 
 	calcula_promedio(m_sim,simulaciones,caminatas);
 	calcula_desvEst(m_sim,simulaciones,caminatas);
+	calcula_distancia(m_sim,simulaciones,caminatas);
 	// imprime_matriz(m_sim,simulaciones,caminatas);
 }
 
@@ -117,6 +118,22 @@ void calcula_desvEst(Float_t m_sim[][N], Int_t simulaciones, Int_t caminatas){
 	}
 	Out3.close();
 	printf("desvEst.csv\n");
+}
+/*Calcula la distancia en cada paso*/
+void calcula_distancia(Float_t m_X[][N], Int_t simulaciones, Int_t caminatas){
+	Float_t X = 0;
+	Float_t distancia = 0;
+	Out3 = ofstream("distancia.csv",ios::out);
+	
+	for (Int_t i = 0; i < caminatas; i++)
+	{
+		X = pow(m_X[i][simulaciones+1],2);
+		distancia = X ;
+		Out3<<distancia<<endl;	
+	}
+
+	Out3.close();
+	printf("distancia.csv\n");
 }
 void imprime_matriz(Float_t m_sim[][N], Int_t simulaciones, Int_t caminatas){
 	for (Int_t i = 0; i < caminatas; i++)

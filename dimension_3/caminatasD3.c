@@ -57,6 +57,7 @@ caminatasD3(){
 	calcula_desvEst(matrizZ,simulaciones,caminatas);
 	crear_archivo_prom(matrizX,matrizY,matrizZ,simulaciones,caminatas);
 	crear_archivo_desv(matrizX,matrizY,matrizZ,simulaciones,caminatas);
+	calcula_distancia(matrizX,matrizY,matrizZ,simulaciones,caminatas);
 }
 // Calcula los pasos de una simulación
 void caminatas(Int_t simulacion, Int_t caminatas, Float_t matrizX[][N], Float_t matrizY[][N], Float_t matrizZ[][N]){
@@ -103,6 +104,7 @@ void caminatas(Int_t simulacion, Int_t caminatas, Float_t matrizX[][N], Float_t 
 			}
 			//En archivo
 			Out2<<x<<" "<<y<<" "<<z<<endl;
+			//en matriz
 			matrizX[i][simulacion-1] = x;
 			matrizY[i][simulacion-1] = y;
 			matrizZ[i][simulacion-1] = z;
@@ -143,6 +145,26 @@ void calcula_desvEst(Float_t m_sim[][N], Int_t simulaciones, Int_t caminatas){
 		//calcula la desviación estándar
 		m_sim[i][simulaciones+1] = sqrt(varianza);
 	}
+}
+/*Calcula la distancia en cada paso*/
+void calcula_distancia(Float_t m_X[][N], Float_t m_Y[][N], Float_t m_Z[][N], Int_t simulaciones, Int_t caminatas){
+	Float_t X = 0;
+	Float_t Y = 0;
+	Float_t Z = 0;
+	Float_t distancia = 0;
+	Out3 = ofstream("distancia.csv",ios::out);
+	
+	for (Int_t i = 0; i < caminatas; i++)
+	{
+		X = pow(m_X[i][simulaciones+1],2);
+		Y = pow(m_Y[i][simulaciones+1],2);
+		Z = pow(m_Z[i][simulaciones+1],2);
+		distancia = X + Y + Z;
+		Out3<<distancia<<endl;	
+	}
+
+	Out3.close();
+	printf("distancia.csv\n");
 }
 void imprime_matriz(Float_t m_sim[][N], Int_t simulaciones, Int_t caminatas){
 	for (Int_t i = 0; i < caminatas; i++)
