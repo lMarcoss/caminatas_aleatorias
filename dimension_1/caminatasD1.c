@@ -12,7 +12,7 @@ using std::endl;
 
 caminatasD1(){
 
-	Int_t simulaciones = 10;
+	Int_t simulaciones = 150;
 	Int_t caminatas = 100;
 	Float_t m_sim[N][N];
 
@@ -128,7 +128,7 @@ void calcula_distancia(Float_t m_X[][N], Int_t simulaciones, Int_t caminatas){
 	for (Int_t i = 0; i < caminatas; i++)
 	{
 		X = pow(m_X[i][simulaciones+1],2);
-		distancia = X ;
+		distancia = sqrt(X) ;
 		Out3<<distancia<<endl;	
 	}
 

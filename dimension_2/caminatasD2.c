@@ -11,7 +11,7 @@ using std::endl;
 #define N 200 //2 más para promedio y desviación
 
 caminatasD2(){
-	Int_t simulaciones = 50;
+	Int_t simulaciones = 150;
 	Int_t caminatas = 100;
  	Float_t matrizX[N][N+3];
  	Float_t matrizY[N][N];
@@ -141,7 +141,7 @@ void calcula_distancia(Float_t m_X[][N], Float_t m_Y[][N], Int_t simulaciones, I
 	{
 		X = pow(m_X[i][simulaciones+1],2);
 		Y = pow(m_Y[i][simulaciones+1],2);
-		distancia = X + Y;
+		distancia = sqrt(X + Y);
 		Out3<<distancia<<endl;	
 	}
 
