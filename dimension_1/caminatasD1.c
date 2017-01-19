@@ -5,16 +5,14 @@
 
 #include <iostream>
 #include <string>
-using std::cin;
-using std::cout;
-using std::endl;
-#define N 2002 //2 más para promedio y desviación
+
+#define S 10 // simulaciones
+#define C 100 // Caminatas o pasos
 
 caminatasD1(){
-
-	Int_t simulaciones = 150;
-	Int_t caminatas = 100;
-	Float_t m_sim[N][N];
+	Int_t simulaciones = S;
+	Int_t caminatas = C;
+ 	Float_t m_sim[C][S+2]; 	
 
 	/*
 	* Cada fila guarda un paso de la simulación
@@ -49,9 +47,8 @@ caminatasD1(){
 	calcula_distancia(m_sim,simulaciones,caminatas);
 	// imprime_matriz(m_sim,simulaciones,caminatas);
 }
-
 // Calcula los pasos de una simulación
-void caminatas(Int_t simulacion, Int_t caminatas, Float_t m_sim[][N]){
+void caminatas(Int_t simulacion, Int_t caminatas, Float_t m_sim[][S+2]){
 	Int_t x = 0;
 	Float_t vol; // volado
 
@@ -79,8 +76,7 @@ void caminatas(Int_t simulacion, Int_t caminatas, Float_t m_sim[][N]){
 	Out2.close();
 	printf("%s\n",nombre_archivo.c_str());
 }
-
-void calcula_promedio(Float_t m_sim[][N], Int_t simulaciones, Int_t caminatas){
+void calcula_promedio(Float_t m_sim[][S+2], Int_t simulaciones, Int_t caminatas){
 	Float_t suma = 0;
 	Float_t promedio = 0;
 	Out3 = ofstream("promedio.csv",ios::out);
@@ -97,7 +93,7 @@ void calcula_promedio(Float_t m_sim[][N], Int_t simulaciones, Int_t caminatas){
 	Out3.close();
 	printf("promedio.csv\n");
 }
-void calcula_desvEst(Float_t m_sim[][N], Int_t simulaciones, Int_t caminatas){
+void calcula_desvEst(Float_t m_sim[][S+2], Int_t simulaciones, Int_t caminatas){
 	Float_t suma = 0; //Suma de desviaciones
 	Float_t varianza = 0; //Suma de desviaciones
 	Out3 = ofstream("desvEst.csv",ios::out);
@@ -120,7 +116,7 @@ void calcula_desvEst(Float_t m_sim[][N], Int_t simulaciones, Int_t caminatas){
 	printf("desvEst.csv\n");
 }
 /*Calcula la distancia en cada paso*/
-void calcula_distancia(Float_t m_X[][N], Int_t simulaciones, Int_t caminatas){
+void calcula_distancia(Float_t m_X[][S+2], Int_t simulaciones, Int_t caminatas){
 	Float_t X = 0;
 	Float_t distancia = 0;
 	Out3 = ofstream("distancia.csv",ios::out);
@@ -134,18 +130,4 @@ void calcula_distancia(Float_t m_X[][N], Int_t simulaciones, Int_t caminatas){
 
 	Out3.close();
 	printf("distancia.csv\n");
-}
-void imprime_matriz(Float_t m_sim[][N], Int_t simulaciones, Int_t caminatas){
-	for (Int_t i = 0; i < caminatas; i++)
-	{
-		printf("\n");
-		for (Int_t j = 0; j < (simulaciones + 1); j++)
-		{
-			if(j < simulaciones){
-				printf("[%d]", m_sim[i][j]);
-			}else{
-				printf("[%.2f]", m_sim[i][j]);
-			}
-		}
-	}
 }
