@@ -66,9 +66,9 @@ void caminatas(Int_t simulacion, Int_t caminatas, Float_t m_sim[][S+2]){
 		{
 			vol = 0 + rand() % (1 +1 - 0);
 			if(vol == 0 ){
-				x--;
+				x--; //izquierda
 			}else{
-				x++;
+				x++; //Derecha
 			}
 			Out2<<x<<endl;
 			m_sim[y][simulacion-1] = x;
