@@ -1,32 +1,32 @@
 /*
-* Caminatas aleatorias de una dimensión
+* pasos aleatorias de una dimensión
 * Autor: Marcos Santiago Leonardo 
 */
 
 #include <iostream>
 #include <string>
 
-#define S 10 // simulaciones
-#define C 100 // Caminatas o pasos
+#define C 100 // caminatas
+#define P 100 // pasos
 
 caminatasD1(){
-	Int_t simulaciones = S;
 	Int_t caminatas = C;
- 	Float_t m_sim[C][S+2]; 	
+	Int_t pasos = P;
+ 	Float_t m_sim[P][C+2]; 	
 
 	/*
 	* Cada fila guarda un paso de la simulación
 	* Cada columna guarda una simulacion
-	* : La utiliza la penúltima columna para el promedio de los pasos de todas las simulaciones
-	* : La utiliza la última columna para la desviación estándar de de los pasos de todas las simulaciones
+	* : La utiliza la penúltima columna para el promedio de los pasos de todas las caminatas
+	* : La utiliza la última columna para la desviación estándar de de los pasos de todas las caminatas
 	*/
 
-	//Simulaciones
+	//caminatas
 	Out1 = ofstream("graficos.txt",ios::out);
-	for (Int_t i = 0; i < simulaciones; i++)
+	for (Int_t i = 0; i < caminatas; i++)
 	{
-		//caminatas por cada simulación
-		caminatas(i+1,caminatas,m_sim);
+		//pasos por cada simulación
+		pasos(i+1,pasos,m_sim);
 		//Crea el script para graficar con gnuplot
 		if((i+1) == 1){
 			Out1<<"plot \"caminata1.csv\" with lines t \"\""<<endl;
@@ -42,13 +42,14 @@ caminatasD1(){
 	Out1<<"replot 0"<<endl;
 	Out1.close();
 
-	calcula_promedio(m_sim,simulaciones,caminatas);
-	calcula_desvEst(m_sim,simulaciones,caminatas);
-	calcula_distancia(m_sim,simulaciones,caminatas);
-	// imprime_matriz(m_sim,simulaciones,caminatas);
+	calcula_promedio(m_sim,caminatas,pasos);
+	calcula_desvEst(m_sim,caminatas,pasos);
+	calcula_distancia(m_sim,caminatas,pasos);
+	// imprime_matriz(m_sim,caminatas,pasos);
+	histograma(m_sim,caminatas,pasos);
 }
 // Calcula los pasos de una simulación
-void caminatas(Int_t simulacion, Int_t caminatas, Float_t m_sim[][S+2]){
+void pasos(Int_t simulacion, Int_t pasos, Float_t m_sim[][C+2]){
 	Int_t x = 0;
 	Float_t vol; // volado
 
@@ -62,7 +63,7 @@ void caminatas(Int_t simulacion, Int_t caminatas, Float_t m_sim[][S+2]){
 	Out2 = ofstream(nombre_archivo.c_str(),ios::out);
 	Out2<<0<<endl; // posición inicial
 	m_sim[0][simulacion-1] = x;
-	for (Int_t y = 1; y < caminatas; y++)
+	for (Int_t y = 1; y < pasos; y++)
 		{
 			vol = 0 + rand() % (1 +1 - 0);
 			if(vol == 0 ){
@@ -76,58 +77,76 @@ void caminatas(Int_t simulacion, Int_t caminatas, Float_t m_sim[][S+2]){
 	Out2.close();
 	printf("%s\n",nombre_archivo.c_str());
 }
-void calcula_promedio(Float_t m_sim[][S+2], Int_t simulaciones, Int_t caminatas){
+void calcula_promedio(Float_t m_sim[][C+2], Int_t caminatas, Int_t pasos){
 	Float_t suma = 0;
 	Float_t promedio = 0;
 	Out3 = ofstream("promedio.csv",ios::out);
-	for (Int_t i = 0; i < caminatas; i++)
+	for (Int_t i = 0; i < pasos; i++)
 	{
 		suma = 0;
-		for (Int_t j = 0; j < simulaciones; j++)
+		for (Int_t j = 0; j < caminatas; j++)
 		{
 			suma = suma + m_sim[i][j];
 		}
-		m_sim[i][simulaciones] = suma / simulaciones;
-		Out3<<m_sim[i][simulaciones]<<endl;
+		m_sim[i][caminatas] = suma / caminatas;
+		Out3<<m_sim[i][caminatas]<<endl;
 	}
 	Out3.close();
 	printf("promedio.csv\n");
 }
-void calcula_desvEst(Float_t m_sim[][S+2], Int_t simulaciones, Int_t caminatas){
+void calcula_desvEst(Float_t m_sim[][C+2], Int_t caminatas, Int_t pasos){
 	Float_t suma = 0; //Suma de desviaciones
 	Float_t varianza = 0; //Suma de desviaciones
 	Out3 = ofstream("desvEst.csv",ios::out);
-	for (Int_t i = 0; i < caminatas; i++)
+	for (Int_t i = 0; i < pasos; i++)
 	{
 		suma = 0;
-		for (Int_t j = 0; j < simulaciones; j++)
+		for (Int_t j = 0; j < caminatas; j++)
 		{
 			//Suma de desviación de cada xi --> ((xi-prom)^ 2)
-			suma = suma + ((m_sim[i][j] - m_sim[i][simulaciones]) * (m_sim[i][j] - m_sim[i][simulaciones]));
+			suma = suma + ((m_sim[i][j] - m_sim[i][caminatas]) * (m_sim[i][j] - m_sim[i][caminatas]));
 		}
 		//calcula la varianza
-		varianza = suma / simulaciones;
+		varianza = suma / caminatas;
 		//calcula la desviación estándar
-		m_sim[i][simulaciones+1] = sqrt(varianza);
+		m_sim[i][caminatas+1] = sqrt(varianza);
 		//guardar en archivo
-		Out3<<m_sim[i][simulaciones+1]<<endl;
+		Out3<<m_sim[i][caminatas+1]<<endl;
 	}
 	Out3.close();
 	printf("desvEst.csv\n");
 }
 /*Calcula la distancia en cada paso*/
-void calcula_distancia(Float_t m_X[][S+2], Int_t simulaciones, Int_t caminatas){
+void calcula_distancia(Float_t m_X[][C+2], Int_t caminatas, Int_t pasos){
 	Float_t X = 0;
 	Float_t distancia = 0;
 	Out3 = ofstream("distancia.csv",ios::out);
 	
-	for (Int_t i = 0; i < caminatas; i++)
+	for (Int_t i = 0; i < pasos; i++)
 	{
-		X = pow(m_X[i][simulaciones+1],2);
+		X = pow(m_X[i][caminatas+1],2);
 		distancia = sqrt(X) ;
 		Out3<<distancia<<endl;	
 	}
 
 	Out3.close();
 	printf("distancia.csv\n");
+}
+void histograma(Float_t m_X[][C+2], Int_t caminatas, Int_t pasos){
+	char nombre_gif[20];
+	char Ext[4] = ".gif";
+	TCanvas *C= new TCanvas();
+	C->cd();
+	for (Int_t i = 0; i < pasos; i++)
+	{
+		sprintf(nombre_gif, "gif_%d%s",i+1,Ext);	
+		TH1F* h1=new TH1F("h1","dimension1",i+1,-(caminatas+ 5),caminatas + 5);
+		for (Int_t j = 0; j < caminatas; j++)
+		{
+			h1 -> Fill(m_X[i][j]);
+		}
+	h1->Draw();
+	C->Update();	
+	C -> SaveAs(nombre_gif);
+	}
 }

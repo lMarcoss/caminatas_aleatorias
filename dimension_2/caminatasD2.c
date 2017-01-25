@@ -6,8 +6,8 @@
 #include <iostream>
 #include <string>
 
-#define S 10 // simulaciones
-#define C 100 // Caminatas o pasos
+#define S 50 // simulaciones
+#define C 500 // Caminatas o pasos
 
 caminatasD2(){
 	Int_t simulaciones = S;
@@ -49,6 +49,7 @@ caminatasD2(){
 	crear_archivo(matrizX,matrizY,simulaciones,caminatas,"promedio.csv"); //Archivo de promedios
 	crear_archivo(matrizX,matrizY,simulaciones+1,caminatas,"desvEstd.csv");
 	calcula_distancia(matrizX,matrizY,simulaciones,caminatas);
+	histograma(matrizX,matrizY,simulaciones,caminatas);
 }
 // Calcula los pasos de una simulación
 void caminatas(Int_t simulacion, Int_t caminatas, Float_t matrizX[][S+2], Float_t matrizY[][S+2]){
@@ -70,7 +71,7 @@ void caminatas(Int_t simulacion, Int_t caminatas, Float_t matrizX[][S+2], Float_
 	matrizY[0][simulacion-1] = y;
 	for (Int_t i = 1; i < caminatas; i++)
 		{
-			//Arriba o abajo
+			//Adelante o atrás
 			vol = 0 + rand() % (1 +1 - 0);
 			if(vol == 0 ){
 				x--;
@@ -149,4 +150,22 @@ void crear_archivo(Float_t m_X[][S+2], Float_t m_Y[][S+2], Int_t simulaciones, I
 	}
 	Out3.close();
 	printf("%s\n",archivo.c_str());
+}
+void histograma(Float_t m_X[][C+2],Float_t m_Y[][C+2], Int_t caminatas, Int_t pasos){
+	char nombre_gif[20];
+	char Ext[4] = ".gif";
+	TCanvas *C = new TCanvas();
+	C->cd();
+	for (Int_t i = 0; i < pasos; i++)
+	{
+		// sprintf(nombre_gif, "gif_%d%s",i+1,Ext);	
+		TH2F* h1=new TH2F("h1","dimension2",i+1,i+1,-(caminatas+ 5),caminatas + 5,-(pasos+ 5),caminatas + 5);
+		for (Int_t j = 0; j < caminatas; j++)
+		{
+			h1 -> Fill(m_X[i][j],m_Y[i][j]);
+		}
+	h1->Draw();
+	// C->Update();	
+	C -> SaveAs(nombre_gif);
+	}
 }
