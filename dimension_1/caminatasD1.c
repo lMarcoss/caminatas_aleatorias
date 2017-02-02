@@ -1,12 +1,12 @@
 /*
-* pasos aleatorias de una dimensión
+* caminatas aleatorias en una dimensión
 * Autor: Marcos Santiago Leonardo 
 */
 
 #include <iostream>
 #include <string>
 
-#define C 100 // caminatas
+#define C 10// caminatas
 #define P 100 // pasos
 
 caminatasD1(){
@@ -18,7 +18,7 @@ caminatasD1(){
 	* Cada fila guarda un paso de la simulación
 	* Cada columna guarda una simulacion
 	* : La utiliza la penúltima columna para el promedio de los pasos de todas las caminatas
-	* : La utiliza la última columna para la desviación estándar de de los pasos de todas las caminatas
+	* : La utiliza la última columna para la desviación estándar de los pasos de todas las caminatas
 	*/
 
 	//caminatas
@@ -46,7 +46,7 @@ caminatasD1(){
 	calcula_desvEst(m_sim,caminatas,pasos);
 	calcula_distancia(m_sim,caminatas,pasos);
 	// imprime_matriz(m_sim,caminatas,pasos);
-	histograma(m_sim,caminatas,pasos);
+	// histograma(m_sim,caminatas,pasos);
 }
 // Calcula los pasos de una simulación
 void pasos(Int_t simulacion, Int_t pasos, Float_t m_sim[][C+2]){
@@ -139,8 +139,17 @@ void histograma(Float_t m_X[][C+2], Int_t caminatas, Int_t pasos){
 	C->cd();
 	for (Int_t i = 0; i < pasos; i++)
 	{
-		sprintf(nombre_gif, "gif_%d%s",i+1,Ext);	
-		TH1F* h1=new TH1F("h1","dimension1",i+1,-(caminatas+ 5),caminatas + 5);
+		if(i<10-1){
+			sprintf(nombre_gif, "gif_000%d%s",i+1,Ext);	
+		}else if(i < 100-1){
+			sprintf(nombre_gif, "gif_00%d%s",i+1,Ext);	
+		}else if(i < 1000-1){
+			sprintf(nombre_gif, "gif_0%d%s",i+1,Ext);	
+		}else{
+			sprintf(nombre_gif, "gif_%d%s",i+1,Ext);	
+		}
+
+		TH1F* h1=new TH1F("h1","dimension1",i+1,-pasos,pasos);
 		for (Int_t j = 0; j < caminatas; j++)
 		{
 			h1 -> Fill(m_X[i][j]);
